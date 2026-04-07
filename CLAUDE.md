@@ -1,5 +1,27 @@
 # Succeed – Intelligent Intake System
 
+## Assignment Brief
+Full assignment brief: [docs/assignment-brief.md](docs/assignment-brief.md)
+
+## Scope Guard
+**IMPORTANT:** This is a 90-minute technical assessment. If any work goes beyond the following scope, STOP and flag it to the user:
+- Multi-step pipeline: extract → score → route → follow-up → output. That's it.
+- Supabase Edge Function as the automation layer (n8n equivalent)
+- Claude API for extraction + follow-up only
+- Deterministic TypeScript scoring engine (the custom logic component)
+- Google Sheets as source of truth output
+- Pipeline logging to Supabase table
+- Must handle the 5 provided test examples
+
+**OUT OF SCOPE — flag if we drift here:**
+- User auth, dashboards, or UI
+- Multiple endpoints or CRUD operations
+- Database beyond the single logging table
+- Batch processing or queuing
+- Deployment automation / CI/CD
+- Production hardening (rate limiting, retries, monitoring)
+- Any feature not required by the assignment brief
+
 ## Project Context
 Technical assessment for Lead Engineer position at Succeed. Stage 2: build a working system that processes messy inbound enquiries into structured, prioritized outputs with clear next actions.
 
@@ -136,3 +158,8 @@ All prompts used during development are logged below with their English translat
 - NL: "Ik mocht zelf equivalenten gebruiken van N8N dus ik denk om dit met Edge functions van Supabase te doen, maar ik heb al twee hobby projecten, kan ik het gewoon wiren aan mijn leadhubcrm supabase project? Wellicht dat ze dan wel ook ergens de logging van de backend structuur willen neerzetten"
 - EN: "The assignment allows n8n equivalents, so I'm thinking Supabase Edge Functions. I already have two hobby projects on Supabase free tier — can I wire it to my LeadHub CRM project? They might also want to see backend logging somewhere."
 - Rationale: Supabase Edge Functions are a more transparent automation layer than n8n — every step is code, not a visual drag-and-drop. Reusing the existing Supabase project avoids free-tier limits. Added `succeed_intake_log` table for full pipeline traceability — reviewers can inspect every step.
+
+**Prompt 3 (assignment brief + scope guard):**
+- NL: "setup a private repo... here is the context: [full assignment brief]. Put this in a .md file, update CLAUDE.md to reference it, setup an alert if we go out of scope. After this I want to brainstorm."
+- EN: Same — user provided the full assignment text and asked to save it, add scope guard, and brainstorm before building.
+- Rationale: Save the assignment as a reference doc. Add explicit scope boundaries in CLAUDE.md so we don't over-engineer a 90-minute assessment. Brainstorm first to align on vision before writing code.
