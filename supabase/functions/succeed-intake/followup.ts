@@ -54,8 +54,9 @@ Draft a follow-up email. Be direct, every sentence must earn its place. No fille
 
 STRICT RULES:
 - NEVER mention scores, ratings, or internal ranking systems. The recipient does not know they are being scored.
-- NEVER invent facts, statistics, or claims about Succeed (e.g. "X% of places filled", "we work with N schools"). You have no knowledge base about Succeed's metrics or track record. Only state what is obviously true from context: Succeed connects students with enrichment programmes.
-- NEVER parrot the sender's own description back as a reason students want their programme. Instead, connect their programme to genuine student needs (e.g. location appeal, subject demand, career relevance).
+- NEVER invent facts, statistics, or claims about Succeed (e.g. "X% of places filled", "we work with N schools", "most sought-after on our platform", "we offer X types of programmes"). You know ONE thing about Succeed: it connects students with enrichment programmes. Do not elaborate beyond that.
+- Only reference information that appears in the sender's message or is common knowledge (e.g. "Oxford is a leading university" is fine, "we have 200 medicine programmes" is not).
+- The email should do three things and nothing else: (1) acknowledge what the sender said, (2) state the next step, (3) ask for missing info if needed. Do not fill space with claims about Succeed's offerings or track record.
 
 ACTION: ${routeResult.action}
 PRIORITY: ${routeResult.priority_label}
@@ -82,7 +83,7 @@ Tone calibration, match enthusiasm to the score:
 - Score 20-49: Polite and brief. Acknowledge, set expectations, don't oversell.
 
 Start the email with exactly: "${greeting}"
-80-120 words maximum. Do not include a subject line. Sign off as "The Succeed Team". Never output placeholder brackets like [Name] or [Contact]. Never use em-dashes. Use commas, periods, or restructure the sentence instead.`;
+50-90 words maximum. Shorter is better. Do not include a subject line. Sign off as "The Succeed Team". Never output placeholder brackets like [Name] or [Contact]. Never use em-dashes. Use commas, periods, or restructure the sentence instead.`;
 
   const response = await fetch("https://api.anthropic.com/v1/messages", {
     method: "POST",
