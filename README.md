@@ -41,17 +41,25 @@ The scoring engine (`supabase/functions/succeed-intake/score.ts`) is a determini
 | 20-49 | `manual_review` | Low |
 | 0-19 | `archive` | None (no follow-up) |
 
-## Running the Tests
+## Try It
 
-The test script fires all 5 assignment examples at the deployed edge function:
+The endpoint is live. Send any enquiry message and get the full pipeline result:
 
 ```bash
-export SUCCEED_FUNCTION_URL=https://<project-ref>.supabase.co/functions/v1/succeed-intake
-export SUPABASE_ANON_KEY=<your-key>
-deno run --allow-net --allow-env test/examples.ts
+curl -X POST "https://tryjxzfkufcybljpnlsz.supabase.co/functions/v1/succeed-intake" \
+  -H "Content-Type: application/json" \
+  -d '{"message":"Hi, we run a summer AI programme in Barcelona for students aged 16-18. We want to increase international applications."}'
 ```
 
-> Note: The edge function is deployed with `--no-verify-jwt` because Supabase's newer key format (`sb_publishable_`/`sb_secret_`) is not a JWT. The key is sent via the `apikey` header.
+The response includes the extracted data, score breakdown with individual factors, action, and follow-up message. The row also appears in the Google Sheet automatically.
+
+## Running All 5 Test Examples
+
+```bash
+bash test/run-examples.sh
+```
+
+This fires all 5 assignment examples against the live endpoint and prints scores, actions, and timing.
 
 ## File Structure
 
