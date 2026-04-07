@@ -32,34 +32,53 @@ export async function generateFollowUp(
   if (!extracted.completeness_flags.has_clear_intent) missing.push("specific partnership goals");
   const missingFields = missing.length > 0 ? missing.join(", ") : "None";
 
-  // Use contact name if available, otherwise default greeting
-  const greeting = extracted.contact_info.name
-    ? `Dear ${extracted.contact_info.name},`
-    : "Hi there,";
+  // Use contact name if available, fall back to role, then generic
+  let greeting = "Hi there,";
+  if (extracted.contact_info.name) {
+    greeting = `Dear ${extracted.contact_info.name},`;
+  } else if (extracted.contact_info.role) {
+    // Title-case the role: "school counsellor" → "School Counsellor"
+    const role = extracted.contact_info.role
+      .split(" ")
+      .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+      .join(" ");
+    greeting = `Dear ${role},`;
+  }
+
+  // Determine if this is supply-side (offering a programme) or demand-side (looking for programmes)
+  const isDemandSide = extracted.sender_type === "school" || extracted.sender_type === "student";
 
   const prompt = `You are writing on behalf of Succeed, a platform that connects students with enrichment programmes (summer schools, bootcamps, academic programmes).
 
-Draft a follow-up email. Be direct — every sentence must earn its place. No filler phrases like "We appreciate you considering", "Please feel free to", or "Thank you for reaching out about your". Open with something specific to their enquiry, not a generic thank-you.
+Draft a follow-up email. Be direct, every sentence must earn its place. No filler phrases like "We appreciate you considering", "Please feel free to", "Thank you for reaching out about your", "our team is conducting a thorough review". Open with something specific to their enquiry, not a generic thank-you.
 
 ACTION: ${routeResult.action}
 PRIORITY: ${routeResult.priority_label}
 SENDER TYPE: ${extracted.sender_type}
+ENQUIRY DIRECTION: ${isDemandSide ? "DEMAND-SIDE (looking for programmes)" : "SUPPLY-SIDE (offering a programme)"}
 PROGRAMME: ${programmeSummary}
 SCORE: ${scoreResult.total}/100
 MISSING INFO: ${missingFields}
 
-Tone calibration — match enthusiasm to the score:
+CRITICAL — respond differently based on enquiry direction:
+
+${isDemandSide ? `This person is LOOKING FOR programmes on Succeed (a school, counsellor, or student).
+- Help them. Tell them Succeed can connect them with relevant programmes.
+- If they mentioned a subject or interest, acknowledge it specifically.
+- Point them toward next steps: browsing the platform, or sharing more about what they need so we can match them.
+- Do NOT say "we're reviewing your enquiry" or "we'll get back to you" — there is nothing to review. Be helpful now.` : `This person is OFFERING a programme and wants to partner with Succeed.
+- Treat them as a potential partner, not an applicant being evaluated.
+- For request_info: ask for what Succeed actually needs to list them (contact details, a call to discuss partnership). Do NOT ask about "pricing structure" like an interrogation. Frame it as "let's explore how we work together."
+- For schedule_call: be enthusiastic about their specific programme. Propose a call.
+- For manual_review: be brief and honest. Acknowledge their interest, say we'll follow up within a few days. No corporate padding.`}
+
+Tone calibration, match enthusiasm to the score:
 - Score 80-100: Genuinely excited. You want this partnership. Be specific about why.
 - Score 50-79: Interested and warm. Show you've read their message carefully.
 - Score 20-49: Polite and brief. Acknowledge, set expectations, don't oversell.
 
-Guidelines based on action:
-- schedule_call: Propose a specific next step (call/meeting). Reference their programme details — show you paid attention.
-- request_info: Ask for the 2-3 most important missing details. Be specific about what we need and why.
-- manual_review: Brief acknowledgement, set a timeline expectation (3-5 business days). Don't pad with corporate filler.
-
 Start the email with exactly: "${greeting}"
-80-120 words maximum. Do not include a subject line. Sign off as "The Succeed Team". Never output placeholder brackets like [Name] or [Contact]. Never use em-dashes (—) — use commas, periods, or restructure the sentence instead.`;
+80-120 words maximum. Do not include a subject line. Sign off as "The Succeed Team". Never output placeholder brackets like [Name] or [Contact]. Never use em-dashes. Use commas, periods, or restructure the sentence instead.`;
 
   const response = await fetch("https://api.anthropic.com/v1/messages", {
     method: "POST",

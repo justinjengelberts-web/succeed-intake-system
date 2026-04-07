@@ -5,6 +5,10 @@
  * Set environment variables before running:
  *   SUCCEED_FUNCTION_URL=https://<project-ref>.supabase.co/functions/v1/succeed-intake
  *   SUPABASE_ANON_KEY=<your-anon-key>
+ *
+ * Note: Supabase's newer key format (sb_publishable_/sb_secret_) is not a JWT,
+ * so the edge function must be deployed with --no-verify-jwt. The key is sent
+ * via the `apikey` header.
  */
 
 const FUNCTION_URL =
@@ -53,7 +57,7 @@ for (const ex of examples) {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        ...(ANON_KEY ? { Authorization: `Bearer ${ANON_KEY}` } : {}),
+        ...(ANON_KEY ? { apikey: ANON_KEY } : {}),
       },
       body: JSON.stringify({ message: ex.message }),
     });

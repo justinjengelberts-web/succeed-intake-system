@@ -135,6 +135,18 @@ export function score(data: ExtractedData): ScoreBreakdown {
     factors.push("+5 relevant subject area");
   }
 
+  // Implied platform fit — academic/summer school programmes from institutional
+  // senders are inherently student-focused, even without explicit audience details
+  if (
+    (data.programme.type === "academic" || data.programme.type === "summer_school") &&
+    (data.sender_type === "programme_provider" || data.sender_type === "organisation") &&
+    platform_fit < 15
+  ) {
+    const boost = 12;
+    platform_fit += boost;
+    factors.push(`+${boost} implied student audience (institutional academic programme)`);
+  }
+
   platform_fit = Math.min(platform_fit, 25);
 
   // === INTENT CLARITY (0-20) ===

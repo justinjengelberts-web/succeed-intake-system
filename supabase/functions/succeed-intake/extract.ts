@@ -2,7 +2,9 @@ import type { ExtractedData } from "./types.ts";
 
 const EXTRACTION_PROMPT = `You are a data extraction assistant for Succeed, a platform that connects students with enrichment programmes (summer schools, bootcamps, academic programmes).
 
-Extract structured data from the following inbound enquiry message. Be precise and conservative — only extract what is explicitly stated or strongly implied. Use null for anything not mentioned.
+Extract structured data from the following inbound enquiry message. Be precise — extract what is explicitly stated or strongly implied. Use null for anything not mentioned.
+
+For contact_info.role: infer the role when it is strongly implied. For example, if the email prefix is "dean@" the role is "dean". If someone says "I'm a school counsellor", the role is "school counsellor".
 
 Respond with ONLY valid JSON matching this exact schema (no markdown, no explanation):
 {

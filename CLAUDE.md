@@ -177,7 +177,7 @@ All prompts used during development are logged below with their English translat
 - Rationale: Identified two issues: (1) Sheets ID was a numeric value instead of the alphanumeric ID from the URL, (2) the private key was missing its PEM header. Also needed to share the sheet with the service account email as Editor.
 
 **Prompt 6 (Sheets ID from URL):**
-- NL: "I got the sheets id right here: /spreadsheets/d/1Abf38vK8lDd-ngdJd4MALJk6koK-KX0No420Aaii5Nk/edit?gid=0#gid=0 But Is this the correct one... how do I know this is the one for the Service account"
+- NL: "I got the sheets id right here: /spreadsheets/d/*****/edit?gid=0#gid=0 But Is this the correct one... how do I know this is the one for the Service account"
 - EN: "Is this the right sheet for the service account?"
 - Rationale: Clarified that the Sheets ID is tied to the spreadsheet, not the account. The service account just needs Editor access via sharing.
 
@@ -215,3 +215,40 @@ All prompts used during development are logged below with their English translat
 - NL: "Where did you log all my prompts?"
 - EN: "Check where prompts are being logged and ensure all session prompts are captured."
 - Rationale: The assignment requires showing all AI prompts used. Prompt log in CLAUDE.md was behind — only had prompts 1-3 from initial setup. Updated with all prompts from this session.
+
+### Session 3 — 2026-04-07
+
+**Prompt 14 (evaluate against requirements):**
+- NL: "I want to evaluate what we currently have against the assignment requirements"
+- EN: "Evaluate the full codebase against the assignment brief requirements."
+- Rationale: Systematic gap analysis before submission. Found: all core requirements met, but missing README.md, test script used old auth header format, no Loom video yet, no evidence of working output in repo.
+
+**Prompt 15 (address gaps + video):**
+- NL: "Let's address the gaps I will make a video but I imagine using OBS to screenrecord would be just fine too right?"
+- EN: "Fix the identified gaps. Can I use OBS instead of Loom for the recording?"
+- Rationale: OBS is fine — Loom is just their suggestion. Fixed test script auth header (Bearer → apikey for new Supabase key format). Created README.md with architecture, scoring logic, design decisions, and run instructions.
+
+**Prompt 16 (video script + sheet wipe):**
+- NL: "Can I also get a script for the screenrecording, and should I wipe the google sheet for visual impact"
+- EN: "Write a video recording script and should I clear the Google Sheet before recording?"
+- Rationale: Yes — wipe the sheet and run examples live on camera for maximum demo impact. Created docs/video-script.md covering all 6 points the assignment asks for in ~7 minutes.
+
+**Prompt 17 (scoring + follow-up quality audit):**
+- NL: "Should we not take into account that we got the dean of oxfords emailaddress in our response btw should we adress him, why do we score him so low this should be a perfect match right?"
+- EN: "Why is Oxford scoring so low? We have the dean's email — we should address them properly."
+- Rationale: Traced the Oxford score: platform_fit was only 5/25 because no explicit audience/age mentioned. Added implied platform fit boost (+12) for academic/summer_school programmes from institutional senders. Fixed greeting to use role ("Dear Dean,") when name is unavailable.
+
+**Prompt 18 (full output evaluation):**
+- NL: "This was just one of the cases. I think we should evaluate all, based on the assignment... [detailed analysis of Barcelona pricing question and school counsellor 'thorough review' issues]"
+- EN: "Evaluate all 5 outputs against the assignment requirements. The follow-ups don't match what Succeed would actually send — Barcelona gets interrogated about pricing, school counsellor gets 'thorough review' corporate filler."
+- Rationale: Fundamental issue: the follow-up prompt didn't distinguish supply-side (programme providers wanting to list) from demand-side (schools/students looking for programmes). Rewrote the prompt with explicit supply/demand routing. Supply-side gets partnership conversation, demand-side gets help finding programmes. Also bumped Oxford implied boost to 12 → score 87.
+
+**Prompt 19 (greeting fixes):**
+- NL: "Dear School Counsellor would be good I think and Dear Dean. Those would be professional right?"
+- EN: "Confirm 'Dear School Counsellor' and 'Dear Dean' as greetings."
+- Rationale: Both professional and appropriate. Fixed title-case for multi-word roles ("school counsellor" → "School Counsellor"). Added extraction prompt hint to infer role from email prefix (dean@ → role: "dean"). Deployed and verified: Oxford scores 87 with "Dear Dean,", school counsellor gets "Dear School Counsellor," with helpful medicine programme response.
+
+**Prompt 20 (prompt log check):**
+- NL: "Did you log my prompts in the claude.md"
+- EN: "Check if the prompt log in CLAUDE.md is up to date with this session."
+- Rationale: It wasn't — added all prompts from session 3 (prompts 14-20).
