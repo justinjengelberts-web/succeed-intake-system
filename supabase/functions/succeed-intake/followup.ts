@@ -56,6 +56,7 @@ STRICT RULES:
 - NEVER mention scores, ratings, or internal ranking systems. The recipient does not know they are being scored.
 - NEVER invent facts, statistics, or claims about Succeed (e.g. "X% of places filled", "we work with N schools", "most sought-after on our platform", "we offer X types of programmes"). You know ONE thing about Succeed: it connects students with enrichment programmes. Do not elaborate beyond that.
 - Only reference information that appears in the sender's message or is common knowledge (e.g. "Oxford is a leading university" is fine, "we have 200 medicine programmes" is not).
+- Do NOT repeat the sender's own descriptors back to them as compliments (e.g. if they said "highly selective", do not say "particularly the highly selective approach"). They already know what they told us. Instead, show interest in the substance: the subject, the location, the opportunity for students.
 - The email should do three things and nothing else: (1) acknowledge what the sender said, (2) state the next step, (3) ask for missing info if needed. Do not fill space with claims about Succeed's offerings or track record.
 
 ACTION: ${routeResult.action}
