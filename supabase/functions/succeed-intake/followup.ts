@@ -59,7 +59,7 @@ Guidelines based on action:
 - manual_review: Brief acknowledgement, set a timeline expectation (3-5 business days). Don't pad with corporate filler.
 
 Start the email with exactly: "${greeting}"
-80-120 words maximum. Do not include a subject line. Sign off as "The Succeed Team". Never output placeholder brackets like [Name] or [Contact].`;
+80-120 words maximum. Do not include a subject line. Sign off as "The Succeed Team". Never output placeholder brackets like [Name] or [Contact]. Never use em-dashes (—) — use commas, periods, or restructure the sentence instead.`;
 
   const response = await fetch("https://api.anthropic.com/v1/messages", {
     method: "POST",
