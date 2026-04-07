@@ -32,9 +32,14 @@ export async function generateFollowUp(
   if (!extracted.completeness_flags.has_clear_intent) missing.push("specific partnership goals");
   const missingFields = missing.length > 0 ? missing.join(", ") : "None";
 
+  // Use contact name if available, otherwise default greeting
+  const greeting = extracted.contact_info.name
+    ? `Dear ${extracted.contact_info.name},`
+    : "Hi there,";
+
   const prompt = `You are writing on behalf of Succeed, a platform that connects students with enrichment programmes (summer schools, bootcamps, academic programmes).
 
-Based on the enquiry analysis below, draft a concise follow-up email. The tone should be professional, warm, and action-oriented.
+Draft a follow-up email. Be direct — every sentence must earn its place. No filler phrases like "We appreciate you considering", "Please feel free to", or "Thank you for reaching out about your". Open with something specific to their enquiry, not a generic thank-you.
 
 ACTION: ${routeResult.action}
 PRIORITY: ${routeResult.priority_label}
@@ -43,12 +48,18 @@ PROGRAMME: ${programmeSummary}
 SCORE: ${scoreResult.total}/100
 MISSING INFO: ${missingFields}
 
-Guidelines based on action:
-- schedule_call: Enthusiastic, propose a specific next step (call/meeting), mention what excites us about their programme. Be specific — reference their programme details.
-- request_info: Polite, express interest, ask for the 2-3 most important missing details (be specific about what we need).
-- manual_review: Acknowledging, say we're reviewing their enquiry, set expectation for timeline.
+Tone calibration — match enthusiasm to the score:
+- Score 80-100: Genuinely excited. You want this partnership. Be specific about why.
+- Score 50-79: Interested and warm. Show you've read their message carefully.
+- Score 20-49: Polite and brief. Acknowledge, set expectations, don't oversell.
 
-Keep the email under 150 words. Do not include a subject line. Sign off as "The Succeed Team".`;
+Guidelines based on action:
+- schedule_call: Propose a specific next step (call/meeting). Reference their programme details — show you paid attention.
+- request_info: Ask for the 2-3 most important missing details. Be specific about what we need and why.
+- manual_review: Brief acknowledgement, set a timeline expectation (3-5 business days). Don't pad with corporate filler.
+
+Start the email with exactly: "${greeting}"
+80-120 words maximum. Do not include a subject line. Sign off as "The Succeed Team". Never output placeholder brackets like [Name] or [Contact].`;
 
   const response = await fetch("https://api.anthropic.com/v1/messages", {
     method: "POST",

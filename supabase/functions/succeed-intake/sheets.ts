@@ -82,6 +82,41 @@ export async function appendToSheet(
 
     const token = await getAccessToken(serviceAccountEmail, privateKey);
 
+    // Get sheet tab name (could be "Sheet1", "Blad1", etc.)
+    const metaRes = await fetch(
+      `https://sheets.googleapis.com/v4/spreadsheets/${sheetsId}?fields=sheets.properties.title`,
+      { headers: { Authorization: `Bearer ${token}` } }
+    );
+    const meta = await metaRes.json();
+    const sheetName = meta.sheets?.[0]?.properties?.title || "Sheet1";
+    const encodedSheet = encodeURIComponent(sheetName);
+
+    // Ensure header row exists (check if A1 is empty)
+    const checkRes = await fetch(
+      `https://sheets.googleapis.com/v4/spreadsheets/${sheetsId}/values/${encodedSheet}!A1`,
+      { headers: { Authorization: `Bearer ${token}` } }
+    );
+    const checkData = await checkRes.json();
+    if (!checkData.values || checkData.values.length === 0) {
+      const headers = [
+        "Enquiry ID", "Timestamp", "Raw Input", "Sender Type",
+        "Programme Type", "Subject", "Location", "Audience", "Fee",
+        "Contact Email", "Intent", "Score", "Score Breakdown",
+        "Scoring Factors", "Action", "Priority", "Follow-up Message",
+      ];
+      await fetch(
+        `https://sheets.googleapis.com/v4/spreadsheets/${sheetsId}/values/${encodedSheet}!A1:Q1?valueInputOption=USER_ENTERED`,
+        {
+          method: "PUT",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ values: [headers] }),
+        }
+      );
+    }
+
     // Build the row
     const scoreBreakdown = `completeness: ${scoreResult.completeness}/25 | value: ${scoreResult.value_signals}/30 | fit: ${scoreResult.platform_fit}/25 | intent: ${scoreResult.intent_clarity}/20`;
     const row = [
@@ -106,7 +141,7 @@ export async function appendToSheet(
       followUp || "N/A",
     ];
 
-    const url = `https://sheets.googleapis.com/v4/spreadsheets/${sheetsId}/values/Sheet1!A:Q:append?valueInputOption=USER_ENTERED&insertDataOption=INSERT_ROWS`;
+    const url = `https://sheets.googleapis.com/v4/spreadsheets/${sheetsId}/values/${encodedSheet}!A:Q:append?valueInputOption=USER_ENTERED&insertDataOption=INSERT_ROWS`;
 
     const response = await fetch(url, {
       method: "POST",

@@ -167,6 +167,7 @@ Deno.serve(async (req) => {
         route: routeResult,
         follow_up: followUp,
         sheets_success: sheetsResult.success,
+        sheets_error: sheetsResult.error || null,
         processing_time_ms: Date.now() - pipelineStart,
       },
       { headers: CORS_HEADERS }
