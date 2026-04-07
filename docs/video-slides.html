@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Succeed Intake System — Recording Guide</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    background: #0a0a0a;
+    color: #e4e4e7;
+    overflow: hidden;
+    height: 100vh;
+  }
+
+  .slide {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    padding: 4rem 6rem;
+    height: 100vh;
+    animation: fadeIn 0.3s ease;
+  }
+
+  .slide.active { display: flex; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .slide-number {
+    position: fixed;
+    top: 1.5rem;
+    right: 2rem;
+    font-size: 0.85rem;
+    color: #52525b;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .timer {
+    position: fixed;
+    top: 1.5rem;
+    left: 2rem;
+    font-size: 0.85rem;
+    color: #52525b;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .progress {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    height: 3px;
+    background: #3b82f6;
+    transition: width 0.3s ease;
+  }
+
+  h1 {
+    font-size: 2.4rem;
+    font-weight: 700;
+    color: #f4f4f5;
+    margin-bottom: 0.5rem;
+    letter-spacing: -0.02em;
+  }
+
+  .time-hint {
+    font-size: 0.95rem;
+    color: #3b82f6;
+    margin-bottom: 2rem;
+    font-weight: 500;
+  }
+
+  .section-label {
+    display: inline-block;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #3b82f6;
+    background: #3b82f620;
+    padding: 0.25rem 0.75rem;
+    border-radius: 4px;
+    margin-bottom: 1.25rem;
+    font-weight: 600;
+  }
+
+  .show-label {
+    display: inline-block;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #f59e0b;
+    background: #f59e0b18;
+    padding: 0.2rem 0.6rem;
+    border-radius: 4px;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+  }
+
+  .say {
+    font-size: 1.35rem;
+    line-height: 1.7;
+    color: #d4d4d8;
+    max-width: 52rem;
+    margin-bottom: 2rem;
+  }
+
+  .say em {
+    color: #f4f4f5;
+    font-style: normal;
+    font-weight: 600;
+  }
+
+  .instructions {
+    background: #18181b;
+    border: 1px solid #27272a;
+    border-radius: 10px;
+    padding: 1.5rem 2rem;
+    max-width: 52rem;
+  }
+
+  .instructions h3 {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #f59e0b;
+    margin-bottom: 0.75rem;
+    font-weight: 600;
+  }
+
+  .instructions ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  .instructions li {
+    font-size: 1.05rem;
+    line-height: 1.6;
+    color: #a1a1aa;
+    padding: 0.3rem 0;
+    padding-left: 1.5rem;
+    position: relative;
+  }
+
+  .instructions li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.7rem;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #f59e0b;
+  }
+
+  .instructions li strong {
+    color: #e4e4e7;
+    font-weight: 600;
+  }
+
+  .instructions code {
+    background: #27272a;
+    padding: 0.15rem 0.45rem;
+    border-radius: 4px;
+    font-size: 0.9em;
+    color: #a78bfa;
+    font-family: 'SF Mono', 'Fira Code', monospace;
+  }
+
+  .columns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    max-width: 52rem;
+  }
+
+  .card {
+    background: #18181b;
+    border: 1px solid #27272a;
+    border-radius: 10px;
+    padding: 1.25rem 1.5rem;
+  }
+
+  .card h4 {
+    font-size: 0.95rem;
+    color: #f4f4f5;
+    margin-bottom: 0.5rem;
+  }
+
+  .card p {
+    font-size: 0.95rem;
+    color: #a1a1aa;
+    line-height: 1.5;
+  }
+
+  .card.highlight {
+    border-color: #3b82f640;
+    background: #3b82f608;
+  }
+
+  .card.warn {
+    border-color: #ef444440;
+    background: #ef444408;
+  }
+
+  .card.success {
+    border-color: #22c55e40;
+    background: #22c55e08;
+  }
+
+  .nav-hint {
+    position: fixed;
+    bottom: 1.5rem;
+    right: 2rem;
+    font-size: 0.8rem;
+    color: #3f3f46;
+  }
+
+  .nav-hint kbd {
+    background: #27272a;
+    padding: 0.15rem 0.5rem;
+    border-radius: 3px;
+    font-family: inherit;
+    border: 1px solid #3f3f46;
+  }
+
+  .checklist { max-width: 52rem; }
+
+  .checklist li {
+    font-size: 1.1rem;
+    padding: 0.5rem 0;
+    padding-left: 2rem;
+    position: relative;
+    color: #a1a1aa;
+    list-style: none;
+  }
+
+  .checklist li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.65rem;
+    width: 14px;
+    height: 14px;
+    border: 2px solid #3f3f46;
+    border-radius: 3px;
+  }
+
+  .checklist li strong { color: #e4e4e7; }
+</style>
+</head>
+<body>
+
+<!-- Slide 0: Prep -->
+<div class="slide active" data-slide="0">
+  <span class="section-label">Before Recording</span>
+  <h1>Prep Checklist</h1>
+  <div class="time-hint">Set these up, then hit record</div>
+  <ul class="checklist">
+    <li><strong>Google Sheet</strong> — open, wiped clean, no data rows</li>
+    <li><strong>Code editor</strong> — repo open, <code>index.ts</code> visible</li>
+    <li><strong>Terminal</strong> — ready with curl commands or test script</li>
+    <li><strong>Supabase dashboard</strong> — <code>succeed_intake_log</code> table open (optional backup)</li>
+    <li><strong>This slide deck</strong> — on a second monitor or off-screen</li>
+  </ul>
+</div>
+
+<!-- Slide 1: Intro -->
+<div class="slide" data-slide="1">
+  <span class="section-label">Slide 1 of 9</span>
+  <h1>Intro</h1>
+  <div class="time-hint">~30 seconds</div>
+
+  <div class="show-label">Show: yourself or screen title</div>
+  <p class="say">
+    "This is my submission for the intelligent intake system. I'll walk through how it works, run it live against all five examples, and explain a key design decision."
+  </p>
+</div>
+
+<!-- Slide 2: Architecture -->
+<div class="slide" data-slide="2">
+  <span class="section-label">Slide 2 of 9</span>
+  <h1>Architecture Overview</h1>
+  <div class="time-hint">~1 minute</div>
+
+  <div class="show-label">Show: index.ts in editor</div>
+  <p class="say">
+    "The system is a single Supabase Edge Function running a 5-step pipeline:"
+  </p>
+
+  <div class="instructions">
+    <h3>Walk through each step</h3>
+    <ul>
+      <li><strong>Extract</strong> — Claude parses the raw message into structured data</li>
+      <li><strong>Score</strong> — deterministic TypeScript engine, no AI, scores 0 to 100</li>
+      <li><strong>Route</strong> — maps score to action: schedule call, request info, manual review, or archive</li>
+      <li><strong>Follow-up</strong> — Claude drafts a response (only if score >= 20, spam gets nothing)</li>
+      <li><strong>Output</strong> — writes everything to Google Sheets, every step logs to Supabase</li>
+    </ul>
+  </div>
+</div>
+
+<!-- Slide 3: Tools -->
+<div class="slide" data-slide="3">
+  <span class="section-label">Slide 3 of 9</span>
+  <h1>Tools Working Together</h1>
+  <div class="time-hint">~30 seconds</div>
+
+  <div class="show-label">Show: still on editor or briefly tab to each</div>
+
+  <div class="columns">
+    <div class="card">
+      <h4>Supabase Edge Functions</h4>
+      <p>Automation layer (n8n equivalent). Single webhook orchestrating the entire pipeline.</p>
+    </div>
+    <div class="card">
+      <h4>Claude API (Sonnet 4)</h4>
+      <p>LLM for extraction + follow-up generation. Not used for scoring.</p>
+    </div>
+    <div class="card">
+      <h4>Google Sheets</h4>
+      <p>Source of truth. One row per enquiry with all fields visible.</p>
+    </div>
+    <div class="card">
+      <h4>Supabase PostgreSQL</h4>
+      <p>Pipeline logging. Full trace of every step with timing.</p>
+    </div>
+  </div>
+</div>
+
+<!-- Slide 4: Run Live -->
+<div class="slide" data-slide="4">
+  <span class="section-label">Slide 4 of 9</span>
+  <h1>Run It Live</h1>
+  <div class="time-hint">~1 minute</div>
+
+  <div class="show-label">Show: terminal</div>
+  <p class="say">
+    "I'm going to run all 5 assignment examples against the live endpoint right now."
+  </p>
+
+  <div class="instructions">
+    <h3>What to do</h3>
+    <ul>
+      <li>Fire the curl commands or run the test script</li>
+      <li>While processing, narrate: "Each request goes through all 5 steps, the results land in the Google Sheet"</li>
+      <li>Wait for all 5 to complete, then switch to the <strong>Google Sheet</strong></li>
+    </ul>
+  </div>
+</div>
+
+<!-- Slide 5: High-Value End-to-End -->
+<div class="slide" data-slide="5">
+  <span class="section-label">Slide 5 of 9</span>
+  <h1>High-Value Input: Oxford Economics</h1>
+  <div class="time-hint">~1.5 minutes</div>
+
+  <div class="show-label">Show: Google Sheet — Oxford row</div>
+  <p class="say">
+    "Let's trace a high-value input end-to-end. This is the Oxford economics programme, fee of 6,000 pounds, contact from a dean with an .edu email."
+  </p>
+
+  <div class="instructions">
+    <h3>Walk through the row columns</h3>
+    <ul>
+      <li><strong>Structured data</strong> — sender type, programme type, subject, location, fee, contact email all extracted</li>
+      <li><strong>Score: 87/100</strong> — point out the breakdown: completeness 25, value 30, fit 17, intent 15</li>
+      <li><strong>Factors</strong> — "+10 high fee", "+12 implied student audience", "+6 institutional email"</li>
+      <li><strong>Action:</strong> <code>schedule_call</code>, high priority</li>
+      <li><strong>Follow-up</strong> — read it: starts "Dear Dean,", enthusiastic, proposes a call</li>
+    </ul>
+  </div>
+</div>
+
+<!-- Slide 6: Problematic Inputs -->
+<div class="slide" data-slide="6">
+  <span class="section-label">Slide 6 of 9</span>
+  <h1>Problematic Inputs</h1>
+  <div class="time-hint">~1 minute</div>
+
+  <div class="show-label">Show: Google Sheet — spam row + school counsellor row</div>
+
+  <div class="columns">
+    <div class="card warn">
+      <h4>Spam: LinkedIn Tool</h4>
+      <p>Score: <strong>0/100</strong>. Action: <strong>archive</strong>. No follow-up generated. System doesn't waste time on irrelevant messages.</p>
+    </div>
+    <div class="card">
+      <h4>Incomplete: School Counsellor</h4>
+      <p>Score: <strong>29/100</strong>. Action: <strong>manual_review</strong>. This is demand-side: someone looking for programmes, not offering one. Follow-up helps them find medicine enrichment, asks for student numbers and timing.</p>
+    </div>
+  </div>
+
+  <p class="say" style="margin-top: 1.5rem;">
+    "The system distinguishes between supply-side enquiries from programme providers and demand-side enquiries from schools or students. Each gets a fundamentally different response."
+  </p>
+</div>
+
+<!-- Slide 7: Follow-Up Quality -->
+<div class="slide" data-slide="7">
+  <span class="section-label">Slide 7 of 9</span>
+  <h1>Follow-Up Message Comparison</h1>
+  <div class="time-hint">~1 minute</div>
+
+  <div class="show-label">Show: Google Sheet — compare follow-up column across rows</div>
+
+  <div class="columns">
+    <div class="card highlight">
+      <h4>High Value (Oxford, 87)</h4>
+      <p>"Dear Dean," — excited, references their programme, proposes a 30-minute call. This moves the partnership forward.</p>
+    </div>
+    <div class="card">
+      <h4>Medium (Barcelona, 61)</h4>
+      <p>Warm, asks for contact details and proposes a call. Frames it as "let's explore working together", not an interrogation.</p>
+    </div>
+    <div class="card success">
+      <h4>Demand-Side (Counsellor, 29)</h4>
+      <p>"Dear School Counsellor," — helpful, points to medicine programmes, asks practical questions. Doesn't pretend to "review" an empty enquiry.</p>
+    </div>
+    <div class="card warn">
+      <h4>Spam (0)</h4>
+      <p>No follow-up. Archived silently.</p>
+    </div>
+  </div>
+
+  <p class="say" style="margin-top: 1.5rem;">
+    "Follow-ups are tone-calibrated by score. Each one differs meaningfully and would be usable in a real workflow."
+  </p>
+</div>
+
+<!-- Slide 8: Design Decision -->
+<div class="slide" data-slide="8">
+  <span class="section-label">Slide 8 of 9</span>
+  <h1>Design Trade-Off: Deterministic Scoring</h1>
+  <div class="time-hint">~1 minute</div>
+
+  <div class="show-label">Show: score.ts in editor</div>
+  <p class="say">
+    "The key trade-off: I deliberately kept scoring out of the LLM. It would have been faster to ask Claude to score everything in one pass, but then you can't explain why something scored 87."
+  </p>
+
+  <div class="instructions">
+    <h3>Point out in the code</h3>
+    <ul>
+      <li>4 weighted dimensions: completeness, value signals, platform fit, intent clarity</li>
+      <li>Every point maps to a specific factor: <code>+10 high fee</code>, <code>+12 age range fits</code>, <code>+6 institutional email</code></li>
+      <li>That's auditable and tunable. If Succeed's priorities change, you adjust a rule, not a prompt</li>
+      <li>LLM is used where it adds value: understanding messy language (extraction) and writing natural responses (follow-ups)</li>
+    </ul>
+  </div>
+</div>
+
+<!-- Slide 9: Wrap Up -->
+<div class="slide" data-slide="9">
+  <span class="section-label">Slide 9 of 9</span>
+  <h1>Wrap-Up</h1>
+  <div class="time-hint">~20 seconds</div>
+
+  <p class="say">
+    "Full prompt log is in the repo, every prompt I gave the AI with the original Dutch, English translation, and rationale. The system handles all 5 examples, differentiates quality, produces actionable output, and every step is logged and traceable. Thanks for reviewing."
+  </p>
+
+  <div class="instructions">
+    <h3>Reminders</h3>
+    <ul>
+      <li>Keep it natural, don't read verbatim</li>
+      <li>Target: 6-8 minutes total</li>
+      <li>Stop recording!</li>
+    </ul>
+  </div>
+</div>
+
+<!-- Navigation -->
+<div class="slide-number"></div>
+<div class="timer" id="timer">0:00</div>
+<div class="progress" id="progress"></div>
+<div class="nav-hint"><kbd>&larr;</kbd> <kbd>&rarr;</kbd> to navigate &middot; <kbd>Space</kbd> next &middot; <kbd>T</kbd> start/pause timer</div>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  let current = 0;
+  let timerRunning = false;
+  let timerStart = 0;
+  let timerElapsed = 0;
+  let timerInterval = null;
+
+  function showSlide(n) {
+    slides[current].classList.remove('active');
+    current = Math.max(0, Math.min(n, slides.length - 1));
+    slides[current].classList.add('active');
+    document.querySelector('.slide-number').textContent =
+      current === 0 ? 'PREP' : `${current} / ${slides.length - 1}`;
+    document.getElementById('progress').style.width =
+      `${(current / (slides.length - 1)) * 100}%`;
+  }
+
+  function updateTimer() {
+    const total = timerElapsed + (timerRunning ? Date.now() - timerStart : 0);
+    const mins = Math.floor(total / 60000);
+    const secs = Math.floor((total % 60000) / 1000);
+    document.getElementById('timer').textContent =
+      `${mins}:${secs.toString().padStart(2, '0')}`;
+  }
+
+  function toggleTimer() {
+    if (timerRunning) {
+      timerElapsed += Date.now() - timerStart;
+      timerRunning = false;
+      clearInterval(timerInterval);
+    } else {
+      timerStart = Date.now();
+      timerRunning = true;
+      timerInterval = setInterval(updateTimer, 1000);
+    }
+  }
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === ' ') {
+      e.preventDefault();
+      showSlide(current + 1);
+    } else if (e.key === 'ArrowLeft') {
+      e.preventDefault();
+      showSlide(current - 1);
+    } else if (e.key === 't' || e.key === 'T') {
+      toggleTimer();
+    }
+  });
+
+  showSlide(0);
+</script>
+</body>
+</html>

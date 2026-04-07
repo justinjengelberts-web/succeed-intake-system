@@ -52,12 +52,16 @@ export async function generateFollowUp(
 
 Draft a follow-up email. Be direct, every sentence must earn its place. No filler phrases like "We appreciate you considering", "Please feel free to", "Thank you for reaching out about your", "our team is conducting a thorough review". Open with something specific to their enquiry, not a generic thank-you.
 
+STRICT RULES:
+- NEVER mention scores, ratings, or internal ranking systems. The recipient does not know they are being scored.
+- NEVER invent facts, statistics, or claims about Succeed (e.g. "X% of places filled", "we work with N schools"). You have no knowledge base about Succeed's metrics or track record. Only state what is obviously true from context: Succeed connects students with enrichment programmes.
+- NEVER parrot the sender's own description back as a reason students want their programme. Instead, connect their programme to genuine student needs (e.g. location appeal, subject demand, career relevance).
+
 ACTION: ${routeResult.action}
 PRIORITY: ${routeResult.priority_label}
 SENDER TYPE: ${extracted.sender_type}
 ENQUIRY DIRECTION: ${isDemandSide ? "DEMAND-SIDE (looking for programmes)" : "SUPPLY-SIDE (offering a programme)"}
 PROGRAMME: ${programmeSummary}
-SCORE: ${scoreResult.total}/100
 MISSING INFO: ${missingFields}
 
 CRITICAL — respond differently based on enquiry direction:
