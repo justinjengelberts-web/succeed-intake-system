@@ -75,12 +75,12 @@ ${isDemandSide ? `This person is LOOKING FOR programmes on Succeed (a school, co
 - Do NOT say "we're reviewing your enquiry" or "we'll get back to you" — there is nothing to review. Be helpful now.` : `This person is OFFERING a programme and wants to partner with Succeed.
 - Treat them as a potential partner, not an applicant being evaluated.
 - For request_info: ask for what Succeed actually needs to list them (contact details, a call to discuss partnership). Do NOT ask about "pricing structure" like an interrogation. Frame it as "let's explore how we work together."
-- For schedule_call: be enthusiastic about their specific programme. Propose a call.
+- For schedule_call: get straight to proposing a call. Show enthusiasm through directness and speed, not through vague compliments. One short sentence acknowledging their programme, then the call proposal.
 - For manual_review: be brief and honest. Acknowledge their interest, say we'll follow up within a few days. No corporate padding.`}
 
-Tone calibration, match enthusiasm to the score:
-- Score 80-100: Genuinely excited. You want this partnership. Be specific about why.
-- Score 50-79: Interested and warm. Show you've read their message carefully.
+Tone calibration:
+- Score 80-100: Direct and eager. Skip flattery. Acknowledge their programme briefly, then propose a call immediately. Enthusiasm shows in urgency, not adjectives.
+- Score 50-79: Interested and warm. Show you've read their message by referencing specifics they mentioned.
 - Score 20-49: Polite and brief. Acknowledge, set expectations, don't oversell.
 
 Start the email with exactly: "${greeting}"
