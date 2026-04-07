@@ -43,10 +43,10 @@ The scoring engine (`supabase/functions/succeed-intake/score.ts`) is a determini
 
 ## Try It
 
-The endpoint is live. Send any enquiry message and get the full pipeline result:
+The endpoint is live — the URL is shared privately in the submission. Send any enquiry message:
 
 ```bash
-curl -X POST "https://tryjxzfkufcybljpnlsz.supabase.co/functions/v1/succeed-intake" \
+curl -X POST "$SUCCEED_FUNCTION_URL" \
   -H "Content-Type: application/json" \
   -d '{"message":"Hi, we run a summer AI programme in Barcelona for students aged 16-18. We want to increase international applications."}'
 ```
@@ -55,11 +55,14 @@ The response includes the extracted data, score breakdown with individual factor
 
 ## Running All 5 Test Examples
 
+Set the endpoint URL, then run:
+
 ```bash
+export SUCCEED_FUNCTION_URL=<provided-in-submission>
 bash test/run-examples.sh
 ```
 
-This fires all 5 assignment examples against the live endpoint and prints scores, actions, and timing.
+This fires all 5 assignment examples and prints scores, actions, and timing.
 
 ## File Structure
 

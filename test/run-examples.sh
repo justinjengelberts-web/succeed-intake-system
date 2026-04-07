@@ -1,8 +1,8 @@
 #!/bin/bash
 # Run all 5 assignment examples against the deployed edge function.
-# Usage: bash test/run-examples.sh
+# Usage: export SUCCEED_FUNCTION_URL=<your-url> && bash test/run-examples.sh
 
-URL="https://tryjxzfkufcybljpnlsz.supabase.co/functions/v1/succeed-intake"
+URL="${SUCCEED_FUNCTION_URL:?Set SUCCEED_FUNCTION_URL before running}"
 
 echo "============================================"
 echo "  Succeed Intake Pipeline — Live Test Run"
